@@ -14,7 +14,10 @@
   "dependencies": {
     "playwright": "^1.37.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "node index.js"
-}
+  }
 }
