@@ -1,0 +1,20 @@
+{
+  "name": "@xemvuisamda/tiktok-scraper",
+  "version": "1.0.0",
+  "description": "Scrape TikTok product details using Playwright",
+  "main": "index.js",
+  "keywords": [
+    "tiktok",
+    "scraper",
+    "playwright",
+    "products"
+  ],
+  "author": "enZo",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.37.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+}
+}
