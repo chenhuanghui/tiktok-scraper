@@ -1,4 +1,7 @@
 const { chromium } = require("playwright");
+// const { chromium } = require('playwright-extra');
+// const stealth = require('playwright-extra-plugin-stealth');
+// chromium.use(stealth());
 
 async function scrapeTikTokProduct(productId) {
     const url = `https://www.tiktok.com/view/product/${productId}`;
