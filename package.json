@@ -12,6 +12,7 @@
   "author": "enZo",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.21.2",
     "playwright": "^1.37.0",
     "playwright-extra": "^4.3.6",
     "playwright-extra-plugin-stealth": "^0.0.1"
