@@ -23,6 +23,7 @@
     "access": "public"
   },
   "scripts": {
+    "postinstall": "npx playwright install-deps",
     "start": "node server.js"
   }
 }

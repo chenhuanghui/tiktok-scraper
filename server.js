@@ -15,6 +15,11 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err.message);
+    res.status(500).json({ error: "An unexpected error occurred." });
+});
+
 // API Endpoint to call the scraper
 app.get("/scrape", async (req, res) => {
     const productId = req.query.productId;

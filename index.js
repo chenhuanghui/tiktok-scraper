@@ -7,7 +7,8 @@ async function scrapeTikTokProduct(productId) {
     const url = `https://www.tiktok.com/view/product/${productId}`;
     // const url = `https://shop.tiktok.com/view/product/1729789070155025084`;
 
-    const browser = await chromium.launch({ headless: false }); // Use headless: false for debugging
+    // const browser = await chromium.launch({ headless: false }); // Use headless: false for debugging
+    const browser = await chromium.launch({ headless: true }); // Use headless: true for production
     const context = await browser.newContext({
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
         viewport: { width: 1920, height: 1080 },
