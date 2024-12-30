@@ -23,6 +23,6 @@
     "access": "public"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   }
 }
