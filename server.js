@@ -1,26 +1,20 @@
-const rateLimit = require("express-rate-limit");
 const express = require("express");
-const { scrapeTikTokProduct } = require("./index"); // Assuming your scraper logic is in a separate file
-
-require("dotenv").config(); // Load environment variables
+const { scrapeTikTokProduct } = require("./index");
+const rateLimit = require("express-rate-limit");
+require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Use PORT from Railway or default to 3000
+const PORT = process.env.PORT || 3000;
 
-// Apply Rate Limiting
+// Apply rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
-    message: { error: "Too many requests, please try again later." }, // Custom response for rate-limited requests
+    max: 100, // Limit each IP to 100 requests
+    message: { error: "Too many requests, please try again later." }
 });
 app.use(limiter);
 
-app.use((err, req, res, next) => {
-    console.error("Unhandled error:", err.message);
-    res.status(500).json({ error: "An unexpected error occurred." });
-});
-
-// API Endpoint to call the scraper
+// Scraper API endpoint
 app.get("/scrape", async (req, res) => {
     const productId = req.query.productId;
 
@@ -29,15 +23,15 @@ app.get("/scrape", async (req, res) => {
     }
 
     try {
-        const data = await scrapeTikTokProduct(productId); // Call your scraping function
-        return res.json(data); // Return the scraped data as JSON
-    } catch (error) {
-        console.error("Error in scraping:", error);
-        return res.status(500).json({ error: "Failed to scrape product", details: error.message });
+        const data = await scrapeTikTokProduct(productId);
+        return res.json(data);
+    } catch (err) {
+        console.error("Error scraping product:", err.message);
+        return res.status(500).json({ error: "Failed to scrape product", details: err.message });
     }
 });
 
-// Start the Express server
+// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
