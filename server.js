@@ -1,8 +1,18 @@
 const express = require("express");
-const { scrapeTikTokProduct } = require("./index"); // Assuming the above code is in 'index.js'
+const { scrapeTikTokProduct } = require("./index"); // Assuming your scraper function is in 'index.js'
+const rateLimit = require("express-rate-limit");
+require("dotenv").config(); // Load environment variables from .env
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Apply Rate Limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: { error: "Too many requests, please try again later." }, // Custom response for rate-limited requests
+});
+app.use(limiter);
 
 // API Endpoint to call the scraper
 app.get("/scrape", async (req, res) => {
