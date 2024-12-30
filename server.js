@@ -1,10 +1,11 @@
-const express = require("express");
-const { scrapeTikTokProduct } = require("./index"); // Assuming your scraper function is in 'index.js'
 const rateLimit = require("express-rate-limit");
-require("dotenv").config(); // Load environment variables from .env
+const express = require("express");
+const { scrapeTikTokProduct } = require("./index"); // Assuming your scraper logic is in a separate file
+
+require("dotenv").config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Use PORT from Railway or default to 3000
 
 // Apply Rate Limiting
 const limiter = rateLimit({
