@@ -1,12 +1,12 @@
 {
   "name": "@xemvuisamda/tiktok-scraper",
   "version": "1.0.0",
-  "description": "Scrape TikTok product details using Playwright",
+  "description": "Scrape TikTok product details using Selenium and Playwright",
   "main": "index.js",
   "keywords": [
     "tiktok",
     "scraper",
-    "playwright",
+    "selenium",
     "products"
   ],
   "author": "enZo",
@@ -16,15 +16,13 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
-    "playwright": "^1.49.1",
-    "playwright-stealth": "^0.0.1",
     "selenium-webdriver": "^4.27.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "postinstall": "npx playwright install chromium",
+    "postinstall": "apt-get update && apt-get install -y wget unzip libnss3 fonts-liberation libappindicator3-1 libxss1 xdg-utils google-chrome-stable && npx chromedriver --install",
     "start": "node server.js"
   }
 }
