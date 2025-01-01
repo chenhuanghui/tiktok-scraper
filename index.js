@@ -1,59 +1,62 @@
-const { chromium } = require("playwright");
+const { Builder, By, until } = require("selenium-webdriver");
+const chrome = require("selenium-webdriver/chrome");
 
 async function scrapeTikTokProduct(productId) {
     const url = `https://www.tiktok.com/view/product/${productId}`;
-
-    // Launch browser
-    const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext({
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-        viewport: { width: 1920, height: 1080 },
-        javaScriptEnabled: true,
-    });
-
-    // Apply stealth techniques manually
-    context.addInitScript(() => {
-        Object.defineProperty(navigator, "webdriver", {
-            get: () => false,
-        });
-    });
-
-    context.addInitScript(() => {
-        window.chrome = { runtime: {} };
-    });
-
-    const page = await context.newPage();
+    let driver;
 
     try {
+        // Initialize the Selenium WebDriver with Chrome
+        const options = new chrome.Options(); // Correctly instantiate Chrome options
+        options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage");
+
+        driver = await new Builder()
+            .forBrowser("chrome")
+            .setChromeOptions(options)
+            .build();
+
+        // Navigate to the product page
         console.log(`Navigating to URL: ${url}`);
-        await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+        await driver.get(url);
 
-        console.log("Page loaded. Extracting data...");
-
-        // Extract the title
-        const titleHandle = await page.locator('xpath=//*[@id="root"]/div/div[3]/div[1]/div[2]/div/div[4]');
-        const title = await titleHandle.innerText();
-
-        // Extract images
-        const imageParentDiv = await page.locator('xpath=//*[@id="root"]/div/div[3]/div[1]/div[1]/div/div/div');
-        const imageUrls = await imageParentDiv.locator("img").evaluateAll((imgs) =>
-            imgs.map((img) => img.getAttribute("src"))
+        // Wait for the title element to load
+        const titleElement = await driver.wait(
+            until.elementLocated(By.xpath('//*[@id="root"]/div/div[3]/div[1]/div[2]/div/div[4]')),
+            30000
         );
+        const title = await titleElement.getText();
 
-        // Extract the price
-        const priceHandle = await page.locator('xpath=//*[@id="root"]/div/div[3]/div[1]/div[2]/div/div[1]/div/span');
-        const price = await priceHandle.innerText();
+        // Wait for and extract images
+        const imageElements = await driver.findElements(By.xpath('//*[@id="root"]/div/div[3]/div[1]/div[1]/div/div/div//img'));
+        const imageUrls = [];
+        for (const img of imageElements) {
+            const src = await img.getAttribute("src");
+            imageUrls.push(src);
+        }
 
-        // Extract the description
-        const descriptionHandle = await page.locator('xpath=//*[@id="root"]/div/div[3]/div[1]/div[9]');
-        const description = await descriptionHandle.innerText();
+        // Wait for and extract price
+        const priceElement = await driver.wait(
+            until.elementLocated(By.xpath('//*[@id="root"]/div/div[3]/div[1]/div[2]/div/div[1]/div/span')),
+            30000
+        );
+        const price = await priceElement.getText();
 
+        // Wait for and extract description
+        const descriptionElement = await driver.wait(
+            until.elementLocated(By.xpath('//*[@id="root"]/div/div[3]/div[1]/div[9]')),
+            30000
+        );
+        const description = await descriptionElement.getText();
+
+        // Return the extracted data
         return { title, imageUrls, price, description };
     } catch (err) {
         console.error("Error scraping product:", err.message);
         throw new Error("Failed to scrape TikTok product.");
     } finally {
-        await browser.close();
+        if (driver) {
+            await driver.quit();
+        }
     }
 }
 
