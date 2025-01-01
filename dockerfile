@@ -31,8 +31,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm install
+# Install Node.js dependencies using npm install instead of npm ci
+RUN npm install --legacy-peer-deps
 
 # Copy project files
 COPY . .
