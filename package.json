@@ -22,7 +22,7 @@
     "access": "public"
   },
   "scripts": {
-    "postinstall": "apt-get update && apt-get install -y wget unzip libnss3 fonts-liberation libappindicator3-1 libxss1 xdg-utils google-chrome-stable && npx chromedriver --install",
+    "postinstall": "npx playwright install chromium",
     "start": "node server.js"
   }
 }
